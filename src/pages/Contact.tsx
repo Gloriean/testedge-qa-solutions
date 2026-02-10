@@ -19,7 +19,7 @@ export default function Contact() {
         email: "",
         phone: "",
         company: "",
-        subject: "", // 1. Initialized as empty string to match placeholder
+        subject: "",
         message: "",
     });
 
@@ -42,7 +42,6 @@ export default function Contact() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        // 2. Simple validation to ensure they didn't leave it on the placeholder
         if (!formData.subject) {
             setStatus("error");
             setErrorMessage("Please select a subject for your inquiry.");
@@ -61,6 +60,12 @@ export default function Contact() {
         submissionData.append("subject", formData.subject);
         submissionData.append("message", formData.message);
 
+        // Honeypot
+        submissionData.append("botcheck", "");
+
+        // Professional Reply-To: This makes replying to lead emails easy
+        submissionData.append("replyto", formData.email);
+
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
@@ -71,7 +76,6 @@ export default function Contact() {
 
             if (data.success) {
                 setStatus("success");
-                // 3. Reset back to placeholder state
                 setFormData({ name: "", email: "", phone: "", company: "", subject: "", message: "" });
             } else {
                 throw new Error(data.message || "Submission failed");
@@ -102,7 +106,6 @@ export default function Contact() {
             <section className="py-20 bg-navy-800/30">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col lg:flex-row gap-16">
-                        {/* Contact Info */}
                         <div className="lg:w-1/3">
                             <h3 className="text-2xl font-bold text-white mb-8">Contact Information</h3>
                             <div className="space-y-8">
@@ -141,7 +144,6 @@ export default function Contact() {
                             </div>
                         </div>
 
-                        {/* Contact Form */}
                         <div className="lg:w-2/3">
                             <Card className="bg-navy-900 border-navy-700 p-8 md:p-10">
                                 <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
@@ -155,16 +157,15 @@ export default function Contact() {
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-6">
+                                        {/* Honeypot */}
+                                        <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
                                                 <input
-                                                    type="text"
-                                                    id="name"
-                                                    name="name"
-                                                    required
-                                                    value={formData.name}
-                                                    onChange={handleChange}
+                                                    type="text" id="name" name="name" required
+                                                    value={formData.name} onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
                                                     placeholder="John Doe"
                                                 />
@@ -172,12 +173,8 @@ export default function Contact() {
                                             <div>
                                                 <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
                                                 <input
-                                                    type="email"
-                                                    id="email"
-                                                    name="email"
-                                                    required
-                                                    value={formData.email}
-                                                    onChange={handleChange}
+                                                    type="email" id="email" name="email" required
+                                                    value={formData.email} onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
                                                     placeholder="john@company.com"
                                                 />
@@ -188,11 +185,8 @@ export default function Contact() {
                                             <div>
                                                 <label htmlFor="phone" className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
                                                 <input
-                                                    type="tel"
-                                                    id="phone"
-                                                    name="phone"
-                                                    value={formData.phone}
-                                                    onChange={handleChange}
+                                                    type="tel" id="phone" name="phone"
+                                                    value={formData.phone} onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
                                                     placeholder="+1 (555) 000-0000"
                                                 />
@@ -200,11 +194,8 @@ export default function Contact() {
                                             <div>
                                                 <label htmlFor="company" className="block text-sm font-medium text-gray-400 mb-2">Company Name</label>
                                                 <input
-                                                    type="text"
-                                                    id="company"
-                                                    name="company"
-                                                    value={formData.company}
-                                                    onChange={handleChange}
+                                                    type="text" id="company" name="company"
+                                                    value={formData.company} onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
                                                     placeholder="TechStart Inc."
                                                 />
@@ -215,16 +206,11 @@ export default function Contact() {
                                             <label htmlFor="subject" className="block text-sm font-medium text-gray-400 mb-2">Subject</label>
                                             <div className="relative">
                                                 <select
-                                                    id="subject"
-                                                    name="subject"
-                                                    required
-                                                    value={formData.subject}
-                                                    onChange={handleChange}
+                                                    id="subject" name="subject" required
+                                                    value={formData.subject} onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors appearance-none"
                                                 >
-                                                    {/* 4. Placeholder Option */}
                                                     <option value="" disabled hidden>Select a Service</option>
-
                                                     <option value="Manual Testing Request">Manual Testing Request</option>
                                                     <option value="Test Automation Setup">Test Automation Setup</option>
                                                     <option value="QA Audit & Strategy">QA Audit & Strategy</option>
@@ -241,12 +227,8 @@ export default function Contact() {
                                         <div>
                                             <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Message</label>
                                             <textarea
-                                                id="message"
-                                                name="message"
-                                                required
-                                                rows={5}
-                                                value={formData.message}
-                                                onChange={handleChange}
+                                                id="message" name="message" required rows={5}
+                                                value={formData.message} onChange={handleChange}
                                                 className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
                                                 placeholder="Tell us about your project requirements..."
                                             />
@@ -265,14 +247,9 @@ export default function Contact() {
                                             className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {status === "loading" ? (
-                                                <>
-                                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                    Sending...
-                                                </>
+                                                <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Sending...</>
                                             ) : (
-                                                <>
-                                                    Send Message <Send size={20} />
-                                                </>
+                                                <>Send Message <Send size={20} /></>
                                             )}
                                         </button>
                                     </form>
