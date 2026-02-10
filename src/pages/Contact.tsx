@@ -1,6 +1,6 @@
 import { useState, type FormEvent, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mail, MapPin, Youtube, Linkedin, Twitter, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, MapPin, Youtube, Linkedin, Twitter, Send, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
 import Card from "../components/Card";
 import { useLocation } from "react-router-dom";
 
@@ -42,9 +42,10 @@ export default function Contact() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!formData.subject) {
+        // Final validation before sending
+        if (!formData.subject || formData.subject === "") {
             setStatus("error");
-            setErrorMessage("Please select a subject for your inquiry.");
+            setErrorMessage("Please select a service from the dropdown.");
             return;
         }
 
@@ -52,6 +53,7 @@ export default function Contact() {
         setErrorMessage("");
 
         const submissionData = new FormData();
+        // Updated with your provided key
         submissionData.append("access_key", "cc118b47-519c-48f0-80ed-5d0cd494c1e7");
         submissionData.append("name", formData.name);
         submissionData.append("email", formData.email);
@@ -59,12 +61,8 @@ export default function Contact() {
         submissionData.append("company", formData.company);
         submissionData.append("subject", formData.subject);
         submissionData.append("message", formData.message);
-
-        // Honeypot
-        submissionData.append("botcheck", "");
-
-        // Professional Reply-To: This makes replying to lead emails easy
-        submissionData.append("replyto", formData.email);
+        submissionData.append("from_name", "TestEdge Website Inquiry");
+        submissionData.append("botcheck", ""); // Anti-spam
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
@@ -78,12 +76,13 @@ export default function Contact() {
                 setStatus("success");
                 setFormData({ name: "", email: "", phone: "", company: "", subject: "", message: "" });
             } else {
-                throw new Error(data.message || "Submission failed");
+                // This specifically catches if the email isn't verified or key is wrong
+                throw new Error(data.message || "Submission failed. Please check if your Web3Forms email is verified.");
             }
         } catch (error: any) {
             console.error("Contact form error:", error);
             setStatus("error");
-            setErrorMessage("Something went wrong. Please try again later.");
+            setErrorMessage(error.message || "Something went wrong. Please try again later.");
         }
     };
 
@@ -106,6 +105,7 @@ export default function Contact() {
             <section className="py-20 bg-navy-800/30">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col lg:flex-row gap-16">
+                        {/* Contact Info */}
                         <div className="lg:w-1/3">
                             <h3 className="text-2xl font-bold text-white mb-8">Contact Information</h3>
                             <div className="space-y-8">
@@ -127,9 +127,7 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-white mb-1">Visit Us</h4>
-                                        <p className="text-gray-400">
-                                            Abuja, Nigeria (Remote-friendly)
-                                        </p>
+                                        <p className="text-gray-400">Abuja, Nigeria (Remote-friendly)</p>
                                     </div>
                                 </Card>
 
@@ -144,6 +142,7 @@ export default function Contact() {
                             </div>
                         </div>
 
+                        {/* Contact Form */}
                         <div className="lg:w-2/3">
                             <Card className="bg-navy-900 border-navy-700 p-8 md:p-10">
                                 <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
@@ -153,104 +152,71 @@ export default function Contact() {
                                         <CheckCircle className="text-green-500 w-16 h-16 mx-auto mb-4" />
                                         <h4 className="text-2xl font-bold text-white mb-2">Message Sent!</h4>
                                         <p className="text-gray-300 mb-6">Thank you for reaching out. We will get back to you within 24 hours.</p>
-                                        <button onClick={() => setStatus("idle")} className="text-green-500 hover:text-green-400 font-semibold">Send another message</button>
+                                        <button onClick={() => setStatus("idle")} className="text-green-500 hover:text-green-400 font-semibold underline">Send another message</button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-6">
-                                        {/* Honeypot */}
-                                        <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
-
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                                                <input
-                                                    type="text" id="name" name="name" required
-                                                    value={formData.name} onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
-                                                    placeholder="John Doe"
-                                                />
+                                                <label className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
+                                                <input name="name" required value={formData.name} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="John Doe" />
                                             </div>
                                             <div>
-                                                <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                                                <input
-                                                    type="email" id="email" name="email" required
-                                                    value={formData.email} onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
-                                                    placeholder="john@company.com"
-                                                />
+                                                <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                                                <input name="email" type="email" required value={formData.email} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="john@company.com" />
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label htmlFor="phone" className="block text-sm font-medium text-gray-400 mb-2">Phone Number</label>
-                                                <input
-                                                    type="tel" id="phone" name="phone"
-                                                    value={formData.phone} onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
-                                                    placeholder="+1 (555) 000-0000"
-                                                />
+                                                <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
+                                                <input name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="+234..." />
                                             </div>
                                             <div>
-                                                <label htmlFor="company" className="block text-sm font-medium text-gray-400 mb-2">Company Name</label>
-                                                <input
-                                                    type="text" id="company" name="company"
-                                                    value={formData.company} onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
-                                                    placeholder="TechStart Inc."
-                                                />
+                                                <label className="block text-sm font-medium text-gray-400 mb-2">Company</label>
+                                                <input name="company" value={formData.company} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="TechStart Inc." />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label htmlFor="subject" className="block text-sm font-medium text-gray-400 mb-2">Subject</label>
+                                            <label className="block text-sm font-medium text-gray-400 mb-2">Service Required</label>
                                             <div className="relative">
                                                 <select
-                                                    id="subject" name="subject" required
-                                                    value={formData.subject} onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors appearance-none"
+                                                    name="subject"
+                                                    required
+                                                    value={formData.subject}
+                                                    onChange={handleChange}
+                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors appearance-none cursor-pointer"
                                                 >
-                                                    <option value="" disabled hidden>Select a Service</option>
-                                                    <option value="Manual Testing Request">Manual Testing Request</option>
-                                                    <option value="Test Automation Setup">Test Automation Setup</option>
-                                                    <option value="QA Audit & Strategy">QA Audit & Strategy</option>
-                                                    <option value="Dedicated QA Staffing">Dedicated QA Staffing</option>
-                                                    <option value="Security & Penetration Testing">Security & Penetration Testing</option>
-                                                    <option value="Other">Other</option>
+                                                    <option value="" disabled className="bg-navy-900">Select a Service</option>
+                                                    <option value="Manual Testing" className="bg-navy-900">Manual Testing Request</option>
+                                                    <option value="Automation" className="bg-navy-900">Test Automation Setup</option>
+                                                    <option value="QA Audit" className="bg-navy-900">QA Audit & Strategy</option>
+                                                    <option value="Staffing" className="bg-navy-900">Dedicated QA Staffing</option>
+                                                    <option value="Security" className="bg-navy-900">Security & Penetration Testing</option>
+                                                    <option value="Other" className="bg-navy-900">Other</option>
                                                 </select>
-                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                    <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-gray-400" />
-                                                </div>
+                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Message</label>
-                                            <textarea
-                                                id="message" name="message" required rows={5}
-                                                value={formData.message} onChange={handleChange}
-                                                className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors placeholder-gray-500"
-                                                placeholder="Tell us about your project requirements..."
-                                            />
+                                            <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                                            <textarea name="message" required rows={5} value={formData.message} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="Tell us about your requirements..." />
                                         </div>
 
                                         {status === "error" && (
                                             <div className="flex items-center gap-2 text-red-400 bg-red-400/10 p-3 rounded-lg text-sm">
-                                                <AlertCircle size={18} />
-                                                {errorMessage}
+                                                <AlertCircle size={18} /> {errorMessage}
                                             </div>
                                         )}
 
                                         <button
                                             type="submit"
                                             disabled={status === "loading"}
-                                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                                         >
-                                            {status === "loading" ? (
-                                                <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Sending...</>
-                                            ) : (
-                                                <>Send Message <Send size={20} /></>
-                                            )}
+                                            {status === "loading" ? "Sending..." : "Send Message"} <Send size={20} />
                                         </button>
                                     </form>
                                 )}
