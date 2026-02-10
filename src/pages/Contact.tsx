@@ -112,7 +112,7 @@ export default function Contact() {
                                     <div>
                                         <h4 className="font-bold text-white mb-1">Visit Us</h4>
                                         <p className="text-gray-400">
-                                            Remote-First, Global Support
+                                            Abuja, Nigeria (Remote-friendly)
                                         </p>
                                     </div>
                                 </Card>

@@ -5,7 +5,7 @@ export default function NotFound() {
     return (
         <>
             <Helmet>
-                <title>404 - Page Not Found | TestEdge</title>
+                <title>404 - Page Not Found | TestEdge QA SOlutions</title>
             </Helmet>
             <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-6">
                 <h1 className="text-9xl font-extrabold text-navy-700">404</h1>

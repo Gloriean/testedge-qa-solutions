@@ -67,10 +67,10 @@ export default function Navbar() {
                         </Link>
                     ))}
                     <a
-                        href="https://calendar.google.com/calendar/u/0/appointments/schedules/YOUR_ID"
+                        href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-md text-sm"
+                        className="bg-[#66bb6a] text-white px-5 py-2 rounded-full font-medium hover:bg-green-500 transition"
                     >
                         Book Consultation
                     </a>
