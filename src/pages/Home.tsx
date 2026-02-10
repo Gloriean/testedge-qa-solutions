@@ -67,7 +67,7 @@ export default function Home() {
     ];
 
     const testimonials: Testimonial[] = [
-        { name: "David Chen", role: "VP of Engineering, NeoBank", text: "TestEdge QA Solutions transformed our release process. Their fintech-specific security audits helped us launch 3 weeks ahead of schedule." },
+        { name: "Julius Idowu", role: "Senior Software Engineer, Switch Recycling Innovations", text: "TestEdge QA Solutions transformed our release process. Their fintech-specific security audits helped us launch 3 weeks ahead of schedule." },
         { name: "Sarah Miller", role: "Product Manager, CareSync", text: "The cross-browser validation was flawless. Our patient portal now works perfectly on older tablets used in clinics." },
     ];
 
@@ -79,7 +79,7 @@ export default function Home() {
             </Helmet>
 
             {/* Hero Section */}
-            {/* 1. Hero Section */}
+
             <section
                 className="relative min-h-[85vh] flex items-center pt-20 bg-cover bg-center"
                 style={{ backgroundImage: "url('/hero-bg.jpg')" }}
@@ -91,10 +91,10 @@ export default function Home() {
                     {/* Fixed clickable buttons with z-index and pointer-events */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start relative z-30">
                         <a
-                            href="https://calendar.google.com/calendar/u/0/appointments/schedules/YOUR_ID"
+                            href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-[#4CAF50] text-[#001133] px-8 py-3 rounded-full font-bold hover:bg-green-400 transition flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95"
+                            className="bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition flex items-center gap-2 cursor-pointer"
                         >
                             Book a Consultation <ArrowRight size={20} />
                         </a>

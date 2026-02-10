@@ -99,8 +99,8 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-white mb-1">Email Us</h4>
-                                        <a href="mailto:hello@testedgeqasolutions.com" className="text-gray-400 hover:text-green-500 transition-colors">
-                                            hello@testedgeqasolutions.com
+                                        <a href="mailto:testedgeqa@gmail.com" className="text-gray-400 hover:text-green-500 transition-colors">
+                                            testedgeqa@gmail.com
                                         </a>
                                     </div>
                                 </Card>

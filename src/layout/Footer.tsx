@@ -80,8 +80,8 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3">
                                 <Mail size={18} className="text-green-500 mt-0.5" />
-                                <a href="mailto:hello@testedgeqasolutions.com" className="text-gray-400 hover:text-green-400 text-sm transition-colors">
-                                    hello@testedgeqasolutions.com
+                                <a href="testedgeqa@gmail.com" className="text-gray-400 hover:text-green-400 text-sm transition-colors">
+                                    testedgeqa@gmail.com
                                 </a>
                             </li>
                             <li className="flex items-start gap-3">
