@@ -135,8 +135,8 @@ export default function Contact() {
                                     <h4 className="font-bold text-white mb-4">Follow Us</h4>
                                     <div className="flex gap-4">
                                         <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Linkedin size={20} /></a>
-                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Twitter size={20} /></a>
-                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Youtube size={20} /></a>
+                                        {/*<a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Twitter size={20} /></a>
+                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Youtube size={20} /></a>*/}
                                     </div>
                                 </div>
                             </div>
