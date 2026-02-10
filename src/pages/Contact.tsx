@@ -170,7 +170,7 @@ export default function Contact() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
-                                                <input name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="+234..." />
+                                                <input name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Company</label>
