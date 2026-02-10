@@ -1,8 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import axios from "axios";
 import { Mail, MapPin, Youtube, Linkedin, Twitter, Send, CheckCircle, AlertCircle } from "lucide-react";
-
 import Card from "../components/Card";
 import { useLocation } from "react-router-dom";
 
@@ -21,22 +19,21 @@ export default function Contact() {
         email: "",
         phone: "",
         company: "",
-        subject: "Testing Request",
+        subject: "", // 1. Initialized as empty string to match placeholder
         message: "",
     });
 
     const location = useLocation();
-    // Pre-fill subject if query param exists (e.g. from QA Audit page)
-    useState(() => {
+    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
         const params = new URLSearchParams(location.search);
         const subjectParam = params.get("subject");
         if (subjectParam) {
             setFormData((prev) => ({ ...prev, subject: subjectParam }));
         }
-    });
-
-    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-    const [errorMessage, setErrorMessage] = useState("");
+    }, [location]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,29 +41,45 @@ export default function Contact() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+
+        // 2. Simple validation to ensure they didn't leave it on the placeholder
+        if (!formData.subject) {
+            setStatus("error");
+            setErrorMessage("Please select a subject for your inquiry.");
+            return;
+        }
+
         setStatus("loading");
         setErrorMessage("");
 
-        try {
-            // Check if we are in development mode to mock the API
-            if (import.meta.env.DEV) {
-                console.log("Dev Mode: Mocking API call to /api/contact", formData);
-                await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
-                // Randomly simulate error for testing (commented out)
-                // if (Math.random() > 0.8) throw new Error("Random mock error");
-                setStatus("success");
-                setFormData({ name: "", email: "", phone: "", company: "", subject: "Testing Request", message: "" });
-                return;
-            }
+        const submissionData = new FormData();
+        submissionData.append("access_key", "cc118b47-519c-48f0-80ed-5d0cd494c1e7");
+        submissionData.append("name", formData.name);
+        submissionData.append("email", formData.email);
+        submissionData.append("phone", formData.phone);
+        submissionData.append("company", formData.company);
+        submissionData.append("subject", formData.subject);
+        submissionData.append("message", formData.message);
 
-            // Real API call
-            await axios.post("/api/contact", formData);
-            setStatus("success");
-            setFormData({ name: "", email: "", phone: "", company: "", subject: "Testing Request", message: "" });
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: submissionData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setStatus("success");
+                // 3. Reset back to placeholder state
+                setFormData({ name: "", email: "", phone: "", company: "", subject: "", message: "" });
+            } else {
+                throw new Error(data.message || "Submission failed");
+            }
         } catch (error: any) {
             console.error("Contact form error:", error);
             setStatus("error");
-            setErrorMessage(error.response?.data?.message || "Something went wrong. Please try again later.");
+            setErrorMessage("Something went wrong. Please try again later.");
         }
     };
 
@@ -93,8 +106,8 @@ export default function Contact() {
                         <div className="lg:w-1/3">
                             <h3 className="text-2xl font-bold text-white mb-8">Contact Information</h3>
                             <div className="space-y-8">
-                                <Card className="flex items-start gap-4">
-                                    <div className="bg-navy-900 p-3 rounded-lg text-green-500">
+                                <Card className="flex items-start gap-4 p-6 bg-navy-900 border-navy-700">
+                                    <div className="bg-navy-800 p-3 rounded-lg text-green-500">
                                         <Mail size={24} />
                                     </div>
                                     <div>
@@ -105,8 +118,8 @@ export default function Contact() {
                                     </div>
                                 </Card>
 
-                                <Card className="flex items-start gap-4">
-                                    <div className="bg-navy-900 p-3 rounded-lg text-green-500">
+                                <Card className="flex items-start gap-4 p-6 bg-navy-900 border-navy-700">
+                                    <div className="bg-navy-800 p-3 rounded-lg text-green-500">
                                         <MapPin size={24} />
                                     </div>
                                     <div>
@@ -204,14 +217,19 @@ export default function Contact() {
                                                 <select
                                                     id="subject"
                                                     name="subject"
+                                                    required
                                                     value={formData.subject}
                                                     onChange={handleChange}
                                                     className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors appearance-none"
                                                 >
-                                                    <option value="Testing Request">Testing Request</option>
-                                                    <option value="QA Consultation">QA Consultation</option>
-                                                    <option value="Automation Setup">Automation Setup</option>
-                                                    <option value="QA Audit">QA Audit</option>
+                                                    {/* 4. Placeholder Option */}
+                                                    <option value="" disabled hidden>Select a Service</option>
+
+                                                    <option value="Manual Testing Request">Manual Testing Request</option>
+                                                    <option value="Test Automation Setup">Test Automation Setup</option>
+                                                    <option value="QA Audit & Strategy">QA Audit & Strategy</option>
+                                                    <option value="Dedicated QA Staffing">Dedicated QA Staffing</option>
+                                                    <option value="Security & Penetration Testing">Security & Penetration Testing</option>
                                                     <option value="Other">Other</option>
                                                 </select>
                                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
