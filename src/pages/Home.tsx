@@ -79,8 +79,11 @@ export default function Home() {
             </Helmet>
 
             {/* Hero Section */}
-            <section className="relative min-h-[80vh] flex items-center bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url('/src/assets/hero-bg.jpg')` }}>
-                <div className="absolute inset-0 bg-[#001133]/70 z-0"></div>
+            {/* 1. Hero Section */}
+            <section
+                className="relative min-h-[85vh] flex items-center pt-20 bg-cover bg-center"
+                style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+            >                <div className="absolute inset-0 bg-[#001133]/70 z-0"></div>
                 <div className="container mx-auto px-6 relative z-10 text-center lg:text-left">
                     <h1 className="text-5xl font-extrabold text-white leading-tight mb-4">Ensuring Excellence, One Test at a Time.</h1>
                     <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0">Precision manual and automated testing solutions to help you ship bug-free software faster.</p>
