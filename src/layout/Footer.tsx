@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Twitter, Youtube, Mail, MapPin } from "lucide-react";
+import { Linkedin, Mail, MapPin } from "lucide-react";
 import Logo from "../components/Logo";
 
 export default function Footer() {
@@ -26,7 +26,8 @@ export default function Footer() {
                                 <Linkedin size={20} />
                             </a>
 
-                            {/* Twitter/X */}
+                           
+                            {/* Twitter/X
                             <a
                                 href="https://twitter.com/your-handle"
                                 target="_blank"
@@ -36,7 +37,7 @@ export default function Footer() {
                                 <Twitter size={20} />
                             </a>
 
-                            {/* YouTube */}
+                            
                             <a
                                 href="https://youtube.com/your-channel"
                                 target="_blank"
@@ -45,6 +46,8 @@ export default function Footer() {
                             >
                                 <Youtube size={20} />
                             </a>
+                             */}
+                            
                         </div>
                     </div>
 

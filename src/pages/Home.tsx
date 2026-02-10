@@ -11,13 +11,14 @@ import {
     MessageSquare,
     CheckCircle,
     ArrowRight,
-    Quote
+    Quote,
+    ChevronDown // Added for the scroll hint
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionHeader from "../components/SectionHeader";
 import Card from "../components/Card";
 
-// --- TYPESCRIPT INTERFACES (Fixes the 16 "any[]" errors and JSX namespace) ---
+// --- TYPESCRIPT INTERFACES ---
 interface Service {
     icon: React.ReactNode;
     title: string;
@@ -79,37 +80,64 @@ export default function Home() {
             </Helmet>
 
             {/* Hero Section */}
-
             <section
-                className="relative min-h-[85vh] flex items-center pt-20 bg-cover bg-center"
+                className="relative min-h-screen flex items-center bg-cover bg-center overflow-hidden"
                 style={{ backgroundImage: "url('/hero-bg.jpg')" }}
-            >                <div className="absolute inset-0 bg-[#001133]/70 z-0"></div>
-                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left">
-                    <h1 className="text-5xl font-extrabold text-white leading-tight mb-4">Ensuring Excellence, One Test at a Time.</h1>
-                    <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0">Precision manual and automated testing solutions to help you ship bug-free software faster.</p>
+            >
+                <div className="absolute inset-0 bg-[#001133]/80 z-0"></div>
 
-                    {/* Fixed clickable buttons with z-index and pointer-events */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start relative z-30">
-                        <a
-                            href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition flex items-center gap-2 cursor-pointer"
-                        >
-                            Book a Consultation <ArrowRight size={20} />
-                        </a>
-                        <Link
-                            to="/contact"
-                            className="border border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer active:scale-95"
-                        >
-                            Contact Us
-                        </Link>
-                    </div>
+                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left pt-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                            Ensuring Excellence, One Test at a Time.
+                        </h1>
+                        <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0">
+                            Precision manual and automated testing solutions to help you ship bug-free software faster.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start relative z-30">
+                            <a
+                                href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-green-500/20"
+                            >
+                                Book a Consultation <ArrowRight size={20} />
+                            </a>
+                            <Link
+                                to="/contact"
+                                className="border border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer"
+                            >
+                                Contact Us
+                            </Link>
+                        </div>
+                    </motion.div>
                 </div>
+
+                {/* --- NEW SCROLL INDICATOR --- */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 1 }}
+                    className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+                >
+                    <span className="text-xs uppercase tracking-[0.2em] text-gray-400 font-medium">Scroll to explore</span>
+                    <motion.div
+                        animate={{ y: [0, 12, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="text-green-500"
+                    >
+                        <ChevronDown size={30} />
+                    </motion.div>
+                </motion.div>
             </section>
 
             {/* Services Section */}
-            <section className="py-24 bg-navy-900">
+            <section id="services" className="py-24 bg-navy-900">
                 <div className="container mx-auto px-6">
                     <SectionHeader title="Our QA Services" subtitle="Comprehensive testing solutions tailored to your needs." />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
@@ -124,7 +152,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Expertise Across Industries Section */}
+            {/* Expertise Across Industries */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
                 <div className="container mx-auto px-6">
                     <SectionHeader title="Expertise Across Industries" subtitle="Specialized QA for complex sectors." />
@@ -152,7 +180,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* WHY CHOOSE SECTION (Restored after Industries) */}
+            {/* WHY CHOOSE SECTION */}
             <section className="py-24 bg-navy-900/50 border-t border-navy-800">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col lg:flex-row gap-16 items-center">
@@ -186,7 +214,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
+            {/* Testimonials */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
                 <div className="container mx-auto px-6">
                     <SectionHeader title="What Our Clients Say" subtitle="Trusted by engineering teams worldwide." />
@@ -210,7 +238,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Tools Section */}
+            {/* Tools Mastered */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
                 <div className="container mx-auto px-6 text-center">
                     <SectionHeader title="Tools We Master" subtitle="Industry-standard tools for maximum efficiency." />
