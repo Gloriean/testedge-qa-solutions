@@ -8,29 +8,35 @@ interface ContactFormData {
     name: string;
     email: string;
     phone: string;
-    countryCode: string; // Added countryCode to state
+    countryCode: string;
     company: string;
     subject: string;
     message: string;
 }
 
-// Common country codes - you can expand this list as needed
+// Global country codes sorted alphabetically by label
 const COUNTRY_CODES = [
-    { code: "+234", label: "NG" },
     { code: "+1", label: "US/CA" },
     { code: "+44", label: "UK" },
-    { code: "+27", label: "ZA" },
+    { code: "+234", label: "NG" },
     { code: "+91", label: "IN" },
+    { code: "+61", label: "AU" },
+    { code: "+27", label: "ZA" },
+    { code: "+49", label: "DE" },
+    { code: "+33", label: "FR" },
+    { code: "+971", label: "UAE" },
     { code: "+254", label: "KE" },
     { code: "+233", label: "GH" },
-];
+    { code: "+353", label: "IE" },
+    { code: "+65", label: "SG" },
+].sort((a, b) => a.label.localeCompare(b.label));
 
 export default function Contact() {
     const [formData, setFormData] = useState<ContactFormData>({
         name: "",
         email: "",
         phone: "",
-        countryCode: "+234", // Default to Nigeria
+        countryCode: "", // No default to ensure user selects their own
         company: "",
         subject: "",
         message: "",
@@ -55,6 +61,12 @@ export default function Contact() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
+        if (!formData.countryCode) {
+            setStatus("error");
+            setErrorMessage("Please select a country code.");
+            return;
+        }
+
         if (!formData.subject || formData.subject === "") {
             setStatus("error");
             setErrorMessage("Please select a service from the dropdown.");
@@ -68,7 +80,6 @@ export default function Contact() {
         submissionData.append("access_key", "cc118b47-519c-48f0-80ed-5d0cd494c1e7");
         submissionData.append("name", formData.name);
         submissionData.append("email", formData.email);
-        // Combine code and number for the final submission
         submissionData.append("phone", `${formData.countryCode} ${formData.phone}`);
         submissionData.append("company", formData.company);
         submissionData.append("subject", formData.subject);
@@ -86,7 +97,7 @@ export default function Contact() {
 
             if (data.success) {
                 setStatus("success");
-                setFormData({ name: "", email: "", phone: "", countryCode: "+234", company: "", subject: "", message: "" });
+                setFormData({ name: "", email: "", phone: "", countryCode: "", company: "", subject: "", message: "" });
             } else {
                 throw new Error(data.message || "Submission failed.");
             }
@@ -179,29 +190,33 @@ export default function Contact() {
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* Combined Phone Input with Selector */}
                                             <div className="w-full">
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
                                                 <div className="flex gap-0 group">
                                                     <div className="relative">
-                                                        <select 
-                                                            name="countryCode" 
-                                                            value={formData.countryCode} 
+                                                        <select
+                                                            name="countryCode"
+                                                            required
+                                                            value={formData.countryCode}
                                                             onChange={handleChange}
-                                                            className="h-full bg-navy-800 border border-navy-600 text-white rounded-l-lg pl-3 pr-8 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors appearance-none cursor-pointer border-r-0"
+                                                            className={`h-full bg-navy-800 border border-navy-600 rounded-l-lg pl-3 pr-8 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors appearance-none cursor-pointer border-r-0 ${formData.countryCode ? 'text-white' : 'text-gray-500'}`}
                                                         >
+                                                            <option value="" disabled>Code</option>
                                                             {COUNTRY_CODES.map(item => (
-                                                                <option key={item.code} value={item.code}>{item.label} {item.code}</option>
+                                                                <option key={item.code} value={item.code} className="text-white">
+                                                                    {item.label} {item.code}
+                                                                </option>
                                                             ))}
                                                         </select>
                                                         <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
                                                     </div>
-                                                    <input 
-                                                        name="phone" 
-                                                        value={formData.phone} 
-                                                        onChange={handleChange} 
-                                                        className="w-full bg-navy-800 border border-navy-600 text-white rounded-r-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" 
-                                                        placeholder="801 234 5678" 
+                                                    <input
+                                                        name="phone"
+                                                        required
+                                                        value={formData.phone}
+                                                        onChange={handleChange}
+                                                        className="w-full bg-navy-800 border border-navy-600 text-white rounded-r-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors"
+                                                        placeholder="801 234 5678"
                                                     />
                                                 </div>
                                             </div>
@@ -244,10 +259,11 @@ export default function Contact() {
                                             </div>
                                         )}
 
+                                        {/* Button Updated: rounded-full (pill-shaped), py-2.5 (slim height), No Icon */}
                                         <button
                                             type="submit"
                                             disabled={status === "loading"}
-                                            className="w-full bg-[#4ADE80] hover:bg-green-300 text-[#001133] font-bold py-3 rounded-lg transition-all flex items-center justify-center disabled:opacity-50"
+                                            className="w-full bg-[#4ADE80] hover:bg-[#3be270] text-[#001133] font-bold py-2.5 rounded-full transition-all flex items-center justify-center disabled:opacity-50 shadow-sm active:scale-[0.98]"
                                         >
                                             {status === "loading" ? "Sending..." : "Send Message"}
                                         </button>
