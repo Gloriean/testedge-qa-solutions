@@ -73,7 +73,7 @@ export default function Home() {
     ];
 
     return (
-        <div className="bg-[#001133] min-h-screen text-white">
+        <div className="bg-[#001133] min-h-screen text-white overflow-x-hidden">
             <Helmet>
                 <title>Home | TestEdge QA Solutions</title>
                 <meta name="description" content="Reliable software testing services for high-quality products." />
@@ -86,17 +86,16 @@ export default function Home() {
             >
                 <div className="absolute inset-0 bg-[#001133]/80 z-0"></div>
 
-                {/* Adjusted top padding (pt-32) to ensure content starts below your fixed Navbar */}
-                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left pt-32">
+                <div className="container mx-auto px-4 md:px-6 relative z-10 text-center lg:text-left pt-32">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
                             Ensuring Excellence, One Test at a Time.
                         </h1>
-                        <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0">
+                        <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0">
                             Precision manual and automated testing solutions to help you ship bug-free software faster.
                         </p>
 
@@ -105,14 +104,14 @@ export default function Home() {
                                 href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-center flex-nowrap gap-2 bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition cursor-pointer shadow-lg shadow-green-500/20 whitespace-nowrap"
+                                className="w-full sm:w-auto flex items-center justify-center flex-nowrap gap-2 bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition cursor-pointer shadow-lg shadow-green-500/20 whitespace-nowrap"
                             >
                                 <span>Book a Consultation</span>
                                 <ArrowRight size={20} className="flex-shrink-0" />
                             </a>
                             <Link
                                 to="/contact"
-                                className="border border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer whitespace-nowrap flex items-center justify-center"
+                                className="w-full sm:w-auto border border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer whitespace-nowrap flex items-center justify-center"
                             >
                                 Contact Us
                             </Link>
@@ -120,7 +119,6 @@ export default function Home() {
                     </motion.div>
                 </div>
 
-                {/* Scroll Indicator */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -140,7 +138,7 @@ export default function Home() {
 
             {/* Services Section */}
             <section id="services" className="py-24 bg-navy-900">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 md:px-6">
                     <SectionHeader title="Our QA Services" subtitle="Comprehensive testing solutions tailored to your needs." />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
                         {services.map((service, index) => (
@@ -156,7 +154,7 @@ export default function Home() {
 
             {/* Expertise Across Industries */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 md:px-6">
                     <SectionHeader title="Expertise Across Industries" subtitle="Specialized QA for complex sectors." />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
                         {industries.map((industry, i) => (
@@ -184,7 +182,7 @@ export default function Home() {
 
             {/* WHY CHOOSE SECTION */}
             <section className="py-24 bg-navy-900/50 border-t border-navy-800">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 md:px-6">
                     <div className="flex flex-col lg:flex-row gap-16 items-center">
                         <div className="lg:w-1/2 space-y-8">
                             <h2 className="text-4xl font-bold">Why Choose TestEdge QA Solutions</h2>
@@ -218,7 +216,7 @@ export default function Home() {
 
             {/* Testimonials */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 md:px-6">
                     <SectionHeader title="What Our Clients Say" subtitle="Trusted by engineering teams worldwide." />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
                         {testimonials.map((t, i) => (
@@ -242,7 +240,7 @@ export default function Home() {
 
             {/* Tools Mastered */}
             <section className="py-24 bg-navy-900 border-t border-navy-800">
-                <div className="container mx-auto px-6 text-center">
+                <div className="container mx-auto px-4 md:px-6 text-center">
                     <SectionHeader title="Tools We Master" subtitle="Industry-standard tools for maximum efficiency." />
                     <div className="flex flex-wrap justify-center gap-4 mt-8">
                         {tools.map((tool, index) => (
