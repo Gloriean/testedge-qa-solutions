@@ -80,11 +80,18 @@ export default function Home() {
             </Helmet>
 
             {/* Hero Section */}
-            <section
-                className="relative min-h-screen flex items-center bg-cover bg-center overflow-hidden"
-                style={{ backgroundImage: "url('/hero-bg.jpg')" }}
-            >
-                <div className="absolute inset-0 bg-[#001133]/80 z-0"></div>
+            <section className="relative min-h-screen flex items-center overflow-hidden">
+                {/* Optimized Background Layer with WebP Fallback */}
+                <div
+                    className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+                    style={{
+                        backgroundImage: "url('/hero-bg.webp'), url('/hero-bg.webp.jpg')",
+                        backgroundPosition: 'center 50%'
+                    }}
+                ></div>
+
+                {/* The Overlay Layer */}
+                <div className="absolute inset-0 bg-[#001133]/80 z-1"></div>
 
                 <div className="container mx-auto px-4 md:px-6 relative z-10 text-center lg:text-left pt-32">
                     <motion.div

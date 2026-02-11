@@ -1,7 +1,6 @@
 import { useState, type FormEvent, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-// Removed Youtube and Twitter from imports to stop the "Unused variable" warnings
-import { Mail, MapPin, Linkedin, Send, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
+import { Mail, MapPin, Linkedin, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
 import Card from "../components/Card";
 import { useLocation } from "react-router-dom";
 
@@ -9,16 +8,29 @@ interface ContactFormData {
     name: string;
     email: string;
     phone: string;
+    countryCode: string; // Added countryCode to state
     company: string;
     subject: string;
     message: string;
 }
+
+// Common country codes - you can expand this list as needed
+const COUNTRY_CODES = [
+    { code: "+234", label: "NG" },
+    { code: "+1", label: "US/CA" },
+    { code: "+44", label: "UK" },
+    { code: "+27", label: "ZA" },
+    { code: "+91", label: "IN" },
+    { code: "+254", label: "KE" },
+    { code: "+233", label: "GH" },
+];
 
 export default function Contact() {
     const [formData, setFormData] = useState<ContactFormData>({
         name: "",
         email: "",
         phone: "",
+        countryCode: "+234", // Default to Nigeria
         company: "",
         subject: "",
         message: "",
@@ -56,7 +68,8 @@ export default function Contact() {
         submissionData.append("access_key", "cc118b47-519c-48f0-80ed-5d0cd494c1e7");
         submissionData.append("name", formData.name);
         submissionData.append("email", formData.email);
-        submissionData.append("phone", formData.phone);
+        // Combine code and number for the final submission
+        submissionData.append("phone", `${formData.countryCode} ${formData.phone}`);
         submissionData.append("company", formData.company);
         submissionData.append("subject", formData.subject);
         submissionData.append("message", formData.message);
@@ -73,14 +86,14 @@ export default function Contact() {
 
             if (data.success) {
                 setStatus("success");
-                setFormData({ name: "", email: "", phone: "", company: "", subject: "", message: "" });
+                setFormData({ name: "", email: "", phone: "", countryCode: "+234", company: "", subject: "", message: "" });
             } else {
-                throw new Error(data.message || "Submission failed. Please check if your email is verified.");
+                throw new Error(data.message || "Submission failed.");
             }
         } catch (error: any) {
             console.error("Contact form error:", error);
             setStatus("error");
-            setErrorMessage(error.message || "Something went wrong. Please try again later.");
+            setErrorMessage(error.message || "Something went wrong.");
         }
     };
 
@@ -92,7 +105,6 @@ export default function Contact() {
             </Helmet>
 
             <section className="py-20 bg-navy-900 border-b border-navy-800">
-                {/* Fixed container padding for mobile edge alignment */}
                 <div className="container mx-auto px-4 md:px-6 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Let's Talk Quality</h1>
                     <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -104,24 +116,24 @@ export default function Contact() {
             <section className="py-20 bg-navy-800/30">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-                        {/* Contact Info */}
+                        {/* Contact Info Sidebar */}
                         <div className="lg:w-1/3">
                             <h3 className="text-2xl font-bold text-white mb-8">Contact Information</h3>
                             <div className="space-y-6">
                                 <Card className="flex items-start gap-4 p-6 bg-navy-900 border-navy-700">
-                                    <div className="bg-navy-800 p-3 rounded-lg text-green-500">
+                                    <div className="bg-navy-800 p-3 rounded-lg text-[#4ADE80] flex-shrink-0">
                                         <Mail size={24} />
                                     </div>
-                                    <div className="flex flex-col">
+                                    <div className="flex flex-col overflow-hidden">
                                         <h4 className="font-bold text-white mb-1">Email Us</h4>
-                                        <a href="mailto:testedgeqa@gmail.com" className="text-gray-400 hover:text-green-500 transition-colors break-all">
+                                        <a href="mailto:testedgeqa@gmail.com" className="text-gray-400 hover:text-[#4ADE80] transition-colors break-all">
                                             testedgeqa@gmail.com
                                         </a>
                                     </div>
                                 </Card>
 
                                 <Card className="flex items-start gap-4 p-6 bg-navy-900 border-navy-700">
-                                    <div className="bg-navy-800 p-3 rounded-lg text-green-500">
+                                    <div className="bg-navy-800 p-3 rounded-lg text-[#4ADE80] flex-shrink-0">
                                         <MapPin size={24} />
                                     </div>
                                     <div className="flex flex-col">
@@ -133,13 +145,9 @@ export default function Contact() {
                                 <div className="pt-8">
                                     <h4 className="font-bold text-white mb-4">Follow Us</h4>
                                     <div className="flex gap-4">
-                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all">
+                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-[#001133] hover:bg-[#4ADE80] transition-all">
                                             <Linkedin size={20} />
                                         </a>
-                                        {/* Twitter and Youtube commented out as requested */}
-                                        {/* <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Twitter size={20} /></a>
-                                        <a href="#" className="p-3 bg-navy-700 rounded-full text-gray-400 hover:text-white hover:bg-green-600 transition-all"><Youtube size={20} /></a> 
-                                        */}
                                     </div>
                                 </div>
                             </div>
@@ -152,32 +160,54 @@ export default function Contact() {
 
                                 {status === "success" ? (
                                     <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-8 text-center">
-                                        <CheckCircle className="text-green-500 w-16 h-16 mx-auto mb-4" />
+                                        <CheckCircle className="text-[#4ADE80] w-16 h-16 mx-auto mb-4" />
                                         <h4 className="text-2xl font-bold text-white mb-2">Message Sent!</h4>
                                         <p className="text-gray-300 mb-6">Thank you for reaching out. We will get back to you within 24 hours.</p>
-                                        <button onClick={() => setStatus("idle")} className="text-green-500 hover:text-green-400 font-semibold underline">Send another message</button>
+                                        <button onClick={() => setStatus("idle")} className="text-[#4ADE80] hover:text-green-300 font-semibold underline">Send another message</button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="w-full">
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                                                <input name="name" required value={formData.name} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="John Doe" />
+                                                <input name="name" required value={formData.name} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" placeholder="John Doe" />
                                             </div>
                                             <div className="w-full">
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                                                <input name="email" type="email" required value={formData.email} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="john@company.com" />
+                                                <input name="email" type="email" required value={formData.email} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" placeholder="john@company.com" />
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {/* Combined Phone Input with Selector */}
                                             <div className="w-full">
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
-                                                <input name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="+234..." />
+                                                <div className="flex gap-0 group">
+                                                    <div className="relative">
+                                                        <select 
+                                                            name="countryCode" 
+                                                            value={formData.countryCode} 
+                                                            onChange={handleChange}
+                                                            className="h-full bg-navy-800 border border-navy-600 text-white rounded-l-lg pl-3 pr-8 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors appearance-none cursor-pointer border-r-0"
+                                                        >
+                                                            {COUNTRY_CODES.map(item => (
+                                                                <option key={item.code} value={item.code}>{item.label} {item.code}</option>
+                                                            ))}
+                                                        </select>
+                                                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                                                    </div>
+                                                    <input 
+                                                        name="phone" 
+                                                        value={formData.phone} 
+                                                        onChange={handleChange} 
+                                                        className="w-full bg-navy-800 border border-navy-600 text-white rounded-r-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" 
+                                                        placeholder="801 234 5678" 
+                                                    />
+                                                </div>
                                             </div>
                                             <div className="w-full">
                                                 <label className="block text-sm font-medium text-gray-400 mb-2">Company</label>
-                                                <input name="company" value={formData.company} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="TechStart Inc." />
+                                                <input name="company" value={formData.company} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" placeholder="TechStart Inc." />
                                             </div>
                                         </div>
 
@@ -189,7 +219,7 @@ export default function Contact() {
                                                     required
                                                     value={formData.subject}
                                                     onChange={handleChange}
-                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors appearance-none cursor-pointer"
+                                                    className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors appearance-none cursor-pointer"
                                                 >
                                                     <option value="" disabled>Select a Service</option>
                                                     <option value="Manual Testing">Manual Testing Request</option>
@@ -205,7 +235,7 @@ export default function Contact() {
 
                                         <div className="w-full">
                                             <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
-                                            <textarea name="message" required rows={5} value={formData.message} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-green-500 focus:outline-none transition-colors" placeholder="Tell us about your requirements..." />
+                                            <textarea name="message" required rows={5} value={formData.message} onChange={handleChange} className="w-full bg-navy-800 border border-navy-600 text-white rounded-lg px-4 py-3 focus:border-[#4ADE80] focus:outline-none transition-colors" placeholder="Tell us about your requirements..." />
                                         </div>
 
                                         {status === "error" && (
@@ -217,9 +247,9 @@ export default function Contact() {
                                         <button
                                             type="submit"
                                             disabled={status === "loading"}
-                                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                            className="w-full bg-[#4ADE80] hover:bg-green-300 text-[#001133] font-bold py-3 rounded-lg transition-all flex items-center justify-center disabled:opacity-50"
                                         >
-                                            {status === "loading" ? "Sending..." : "Send Message"} <Send size={20} />
+                                            {status === "loading" ? "Sending..." : "Send Message"}
                                         </button>
                                     </form>
                                 )}
