@@ -12,7 +12,7 @@ import {
     CheckCircle,
     ArrowRight,
     Quote,
-    ChevronDown // Added for the scroll hint
+    ChevronDown
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionHeader from "../components/SectionHeader";
@@ -86,7 +86,8 @@ export default function Home() {
             >
                 <div className="absolute inset-0 bg-[#001133]/80 z-0"></div>
 
-                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left pt-20">
+                {/* Adjusted top padding (pt-32) to ensure content starts below your fixed Navbar */}
+                <div className="container mx-auto px-6 relative z-10 text-center lg:text-left pt-32">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -104,13 +105,14 @@ export default function Home() {
                                 href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-green-500/20"
+                                className="flex items-center justify-center flex-nowrap gap-2 bg-[#4CAF50] text-[#001133] px-8 py-4 rounded-full font-bold hover:bg-green-400 transition cursor-pointer shadow-lg shadow-green-500/20 whitespace-nowrap"
                             >
-                                Book a Consultation <ArrowRight size={20} />
+                                <span>Book a Consultation</span>
+                                <ArrowRight size={20} className="flex-shrink-0" />
                             </a>
                             <Link
                                 to="/contact"
-                                className="border border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer"
+                                className="border border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition text-center cursor-pointer whitespace-nowrap flex items-center justify-center"
                             >
                                 Contact Us
                             </Link>
@@ -118,7 +120,7 @@ export default function Home() {
                     </motion.div>
                 </div>
 
-                {/* --- NEW SCROLL INDICATOR --- */}
+                {/* Scroll Indicator */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

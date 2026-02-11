@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
-// FIX: Adjusted Logo import path
 import Logo from "../components/Logo";
 
 export default function Navbar() {
@@ -41,9 +40,9 @@ export default function Navbar() {
             )}
         >
             <div className="container mx-auto px-6 flex justify-between items-center">
-                {/* Logo */}
+                {/* Logo Link */}
                 <Link to="/" className="hover:opacity-90 transition-opacity z-50">
-                    <Logo className="h-10" />
+                    <Logo />
                 </Link>
 
                 {/* Desktop Menu */}
@@ -66,13 +65,16 @@ export default function Navbar() {
                             )}
                         </Link>
                     ))}
+
+                    {/* Consistent Button Styling with No-Wrap Fix */}
                     <a
                         href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-[#66bb6a] text-white px-5 py-2 rounded-full font-medium hover:bg-green-500 transition"
+                        className="flex items-center justify-center gap-2 bg-[#4CAF50] text-[#001133] px-6 py-3 rounded-full font-bold hover:bg-green-400 transition cursor-pointer shadow-lg shadow-green-500/20 whitespace-nowrap flex-nowrap"
                     >
-                        Book Consultation
+                        <span>Book Consultation</span>
+                        <ArrowRight size={18} className="flex-shrink-0" />
                     </a>
                 </div>
 
@@ -107,13 +109,15 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
+
                             <a
-                                href="https://calendar.google.com/..."
+                                href="https://calendar.app.google/ns4EYXoZnqLwfFqRA"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-green-600 text-center px-10 py-4 rounded-full font-bold text-white mt-4 text-xl"
+                                className="flex items-center justify-center gap-2 bg-[#4CAF50] text-[#001133] px-10 py-4 rounded-full font-bold hover:bg-green-400 transition cursor-pointer whitespace-nowrap flex-nowrap"
                             >
-                                Book Consultation
+                                <span>Book Consultation</span>
+                                <ArrowRight size={20} className="flex-shrink-0" />
                             </a>
                         </div>
                     </motion.div>
